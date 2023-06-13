@@ -15,8 +15,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -40,24 +43,27 @@ import java.util.TimeZone;
 public class EmergencyAdapter extends RecyclerView.Adapter<EmergencyAdapter.ViewHolder> {
 
     public static MainActivityFragments mActivity;
-    private List<Emergency> emergenciesList;
+    private final List<Emergency> emergenciesList;
     Activity activity;
     static final String TAG = "AdapterEmergency";
-    private Context context;
+    private final Context context;
+    private static Fragment fragment;
+    private static NavController  navController;
 
     TimeZone userTimeZone = TimeZone.getDefault();
 //    Geocoder geocoder = new Geocoder(context, Locale.getDefault());
 //    SimpleDateFormat dateFormatLocal = new SimpleDateFormat("HH:mm dd-MM-yyyy");
 
-    public EmergencyAdapter(List<Emergency> emergenciesList, Context context, Activity activity) {
+    public EmergencyAdapter(List<Emergency> emergenciesList, Context context, Activity activity, NavController navController) {
         Log.d(TAG, "EmergencyAdapter: " + emergenciesList);
         this.emergenciesList = emergenciesList;
         this.context = context;
         this.activity = activity;
+        EmergencyAdapter.navController = navController;
         Log.d(TAG, "EmergencyAdapter: CREATE");
     }
     public static void goToFragment() {
-        mActivity.goToFragment();
+        navController.navigate(R.id.fragment_map);
     }
 
 
@@ -152,7 +158,7 @@ public class EmergencyAdapter extends RecyclerView.Adapter<EmergencyAdapter.View
             Log.d("Address", address);
             emergencyMapButton.setOnClickListener(v -> {
                 MyViewModel.getInstance().getLatLng().postValue(loc);
-                mActivity.goToFragment();
+                goToFragment();
             });
             Glide.with(context).load(photo).into(emergencyPhoto);
          } catch (Exception e) {

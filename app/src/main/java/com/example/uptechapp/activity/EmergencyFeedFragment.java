@@ -17,6 +17,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -43,6 +46,7 @@ public class EmergencyFeedFragment extends Fragment {
 
     List<Emergency> myEmergencyList;
     EmergencyAdapter adapter;
+    private NavController navController;
 
 
     public Dialog Dialog(@Nullable Bundle savedInstanceState) {
@@ -87,6 +91,8 @@ public class EmergencyFeedFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = FragmentEmergencyFeedBinding.inflate(getLayoutInflater());
+        NavHostFragment navHostFragment = (NavHostFragment) getParentFragment();
+        navController = navHostFragment.getNavController();
 
         if (learn == 0){
             Dialog(null);
@@ -101,7 +107,7 @@ public class EmergencyFeedFragment extends Fragment {
         emergencyFeed.setLayoutManager(layoutManager);
 
         myEmergencyList = new ArrayList<Emergency>();
-        adapter = new EmergencyAdapter(myEmergencyList, getContext(), getActivity());
+        adapter = new EmergencyAdapter(myEmergencyList, getContext(), getActivity(), navController);
 
         emergencyFeed.setAdapter(adapter);
 
@@ -168,7 +174,6 @@ public class EmergencyFeedFragment extends Fragment {
                     @Override
                     public void OnFailure() {
                         progressBar.dismiss();
-
                     }
                 });
                 adapter.notifyDataSetChanged();

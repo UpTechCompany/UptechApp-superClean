@@ -90,6 +90,7 @@ public class MapFragment extends Fragment {
         SupportMapFragment mapFragment = (SupportMapFragment)
                 getChildFragmentManager().findFragmentById(R.id.google_map);
         mapFragment.getMapAsync(mapService);
+
         if (latLngs != null){
             mapFragment.getMapAsync(new OnMapReadyCallback() {
                 @Override
@@ -97,7 +98,6 @@ public class MapFragment extends Fragment {
                     mMap = googleMap;
                     zoom(latLngs, 18);
                 }
-
             });
     }
 
